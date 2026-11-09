@@ -1,0 +1,48 @@
+#cloud-config
+# BocaBell: fully unattended install from the stick. No interactive sections.
+autoinstall:
+  version: 1
+  locale: en_US.UTF-8
+  keyboard:
+    layout: us
+  timezone: America/New_York
+  identity:
+    realname: tara
+    username: tara
+    hostname: BocaBell
+    password: "@@PWHASH@@"
+  source:
+    id: ubuntu-server-minimal
+    search_drivers: false
+  codecs:
+    install: false
+  drivers:
+    install: false
+  ssh:
+    install-server: true
+    allow-pw: true
+  storage:
+    layout:
+      name: direct
+      match:
+        size: largest
+  apt:
+    # Download servers, tried in this order. No usable server = stop before the disk is touched
+    # (this stick has no offline package store to fall back on).
+    fallback: abort
+    mirror-selection:
+      primary:
+        - uri: "http://us.archive.ubuntu.com/ubuntu"
+        - country-mirror
+        - uri: "http://archive.ubuntu.com/ubuntu"
+  refresh-installer:
+    update: false
+  early-commands:
+    # Runs before the disk is touched. Any failure here stops the install.
+    - bash /cdrom/payload/early.sh
+  late-commands:
+    - mkdir -p /target/opt/bocabell
+    - cp -r /cdrom/payload/. /target/opt/bocabell/
+    - curtin in-target --target=/target -- bash /opt/bocabell/target-setup.sh
+    - touch /target/var/lib/bocabell-installed
+  shutdown: reboot

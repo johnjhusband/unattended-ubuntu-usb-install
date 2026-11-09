@@ -1,0 +1,11 @@
+# Never commit these: they hold secrets or are large binaries.
+stick/payload/wifi.nmconnection
+stick/autoinstall.final.yaml
+stick/payload/claude.xz
+stick/payload/claude.version
+stick/payload/claude/
+stick/payload/debs/
+test/debs/
+*.iso
+*.img
+*.qcow2

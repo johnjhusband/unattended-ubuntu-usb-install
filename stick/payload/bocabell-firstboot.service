@@ -1,0 +1,14 @@
+[Unit]
+Description=BocaBell first-boot setup (Claude Code for tara)
+After=cloud-config.service
+Before=display-manager.service gdm.service
+ConditionPathExists=!/var/lib/bocabell-firstboot.done
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/bocabell-firstboot
+RemainAfterExit=yes
+TimeoutStartSec=600
+
+[Install]
+WantedBy=graphical.target
